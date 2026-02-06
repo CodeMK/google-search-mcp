@@ -1,5 +1,5 @@
 /**
- * Google Search MCP - Main Entry Point
+ * Search MCP - Main Entry Point
  */
 
 import { startServer } from './api/server';
@@ -8,7 +8,7 @@ import { searchEngine } from './services/search-engine';
 
 async function main(): Promise<void> {
   try {
-    logger.info('Starting Google Search MCP...', 'Main');
+    logger.info('Starting Search MCP...', 'Main');
 
     // Start HTTP server
     await startServer();

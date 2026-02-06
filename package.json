@@ -1,8 +1,18 @@
 {
-  "name": "google-search-mcp",
+  "name": "@codemk/search-mcp",
   "version": "1.0.0",
-  "description": "Google Search Scraper with Playwright - Localized search based on geographic location",
+  "description": "MCP server for Google Search integration with AI applications",
   "main": "dist/index.js",
+  "bin": {
+    "search-mcp": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md",
+    "MCP_GUIDE.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
@@ -13,16 +23,33 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "search",
     "google-search",
-    "scraper",
+    "web-search",
+    "ai",
+    "claude",
     "playwright",
-    "web-automation"
+    "automation"
   ],
-  "author": "",
+  "author": "CodeMK",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodeMK/search-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CodeMK/search-mcp/issues"
+  },
+  "homepage": "https://github.com/CodeMK/search-mcp#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
     "cors": "^2.8.5",

@@ -26,7 +26,7 @@ Write-Host "[3/4] 开始安装 Chromium..." -ForegroundColor Cyan
 Write-Host "  这可能需要几分钟，请耐心等待..." -ForegroundColor Yellow
 Write-Host ""
 
-Set-Location "D:\google-search-mcp"
+Set-Location "D:\search-mcp"
 & npx playwright install chromium
 
 if ($LASTEXITCODE -eq 0) {

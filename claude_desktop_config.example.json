@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "google-search": {
-      "command": "node",
-      "args": ["D:\\google-search-mcp\\dist\\mcp-server.js"],
+    "search": {
+      "command": "search-mcp",
+      "args": ["mcp"],
       "env": {
         "HEADLESS": "true",
         "LOG_LEVEL": "info"

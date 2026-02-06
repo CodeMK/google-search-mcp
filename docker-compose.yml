@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: google-search-mcp
+    container_name: search-mcp
     ports:
       - "${PORT:-3000}:3000"
     environment:

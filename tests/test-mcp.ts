@@ -52,10 +52,10 @@ async function testMCPServer(): Promise<void> {
     console.log('Available tools:', JSON.stringify(toolsResponse, null, 2));
     console.log('\n');
 
-    // Call google_search tool
-    console.log('🔍 Testing google_search tool...');
+    // Call search tool
+    console.log('🔍 Testing search tool...');
     const searchResponse = await client.callTool({
-      name: 'google_search',
+      name: 'search',
       arguments: {
         query: 'TypeScript tutorial',
         numResults: 3,

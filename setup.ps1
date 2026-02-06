@@ -1,7 +1,7 @@
-# Google Search MCP - Quick Setup Script for Windows
+# Search MCP - Quick Setup Script for Windows
 
 Write-Host "================================================" -ForegroundColor Cyan
-Write-Host "  Google Search MCP - Setup & Start" -ForegroundColor Cyan
+Write-Host "  Search MCP - Setup & Start" -ForegroundColor Cyan
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host ""
 

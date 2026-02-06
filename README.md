@@ -1,8 +1,8 @@
-# Google Search MCP Server
+# Search MCP Server
 
 > A Model Context Protocol (MCP) server for integrating Google Search capabilities into AI applications
 >
-> 🤖 **Native Claude Desktop integration** - Use Google Search directly in Claude!
+> 🤖 **Native Claude Desktop integration** - Use Google search directly in Claude!
 
 ---
 
@@ -12,18 +12,22 @@
 
 ## ⚠️ Disclaimer
 
-**This project is for educational and research purposes only.** It is a personal tool designed to help developers integrate search capabilities into their AI applications. Users are responsible for ensuring their use complies with Google's Terms of Service and applicable laws and regulations.
+**This project is for educational and research purposes only.** It is a personal tool designed to help developers integrate search capabilities into their AI applications. Users are responsible for ensuring their use complies with applicable terms of service and applicable laws and regulations.
 
 **Important:**
-- This is **NOT** an official Google product
-- This is **NOT** affiliated with or endorsed by Google
-- Respect Google's Terms of Service
+- This is **NOT** an official product of any search engine
+- This is **NOT** affiliated with or endorsed by any search provider
+- **Google and Google Search are trademarks of Google LLC. This project is independent and not endorsed by or affiliated with Google.**
+- Users must comply with [Google's Terms of Service](https://policies.google.com/terms)
+- Users must comply with [Google's Automated Query Guidelines](https://support.google.com/websearch/answer/86640)
+- Respect rate limits and robots.txt
 - Use at your own risk
 
 ---
 
 ## Features
 
+- ✅ **Google Search Integration** - Leverage Google's powerful search engine
 - ✅ **MCP Protocol Support** - Native Claude Desktop integration via Model Context Protocol
 - ✅ **REST API** - Standard HTTP interface for web applications
 - ✅ **Localized Search** - Geographic location-based search results
@@ -44,8 +48,8 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/CodeMK/google-search-mcp.git
-cd google-search-mcp
+git clone https://github.com/CodeMK/search-mcp.git
+cd search-mcp
 
 # Install dependencies
 npm install
@@ -69,7 +73,7 @@ This project supports **two modes** - choose based on your use case:
 Perfect for AI-assisted development with Claude Desktop:
 
 ```bash
-npm run start:mcp
+search-mcp mcp
 ```
 
 Then configure Claude Desktop following the [MCP Setup Guide](#-claude-desktop-setup) below.
@@ -79,7 +83,7 @@ Then configure Claude Desktop following the [MCP Setup Guide](#-claude-desktop-s
 Traditional HTTP API for web applications:
 
 ```bash
-npm start
+search-mcp start
 ```
 
 Server runs on `http://localhost:3000/api/search`
@@ -105,9 +109,9 @@ Server runs on `http://localhost:3000/api/search`
 ```json
 {
   "mcpServers": {
-    "google-search": {
+    "search": {
       "command": "node",
-      "args": ["D:\\google-search-mcp\\dist\\mcp-server.js"],
+      "args": ["D:\\search-mcp\\dist\\mcp-server.js"],
       "env": {
         "HEADLESS": "true",
         "LOG_LEVEL": "info"
@@ -117,7 +121,7 @@ Server runs on `http://localhost:3000/api/search`
 }
 ```
 
-**Important**: Replace `D:\\google-search-mcp` with your actual project path.
+**Important**: Replace `D:\\search-mcp` with your actual project path. On macOS/Linux, use forward slashes: `/path/to/search-mcp/dist/mcp-server.js`
 
 ### Step 3: Restart Claude Desktop
 
@@ -127,7 +131,7 @@ Completely quit and restart Claude Desktop.
 
 In Claude Desktop, type:
 ```
-Please use google_search to find "TypeScript tutorial"
+Please use search to find "TypeScript tutorial"
 ```
 
 ---
@@ -144,7 +148,7 @@ curl -X POST http://localhost:3000/api/search \
 
 ### MCP Tool (Claude Desktop)
 
-Available as the `google_search` tool in Claude Desktop conversations.
+Available as the `search` tool in Claude Desktop conversations.
 
 **Request Parameters:**
 
@@ -218,17 +222,19 @@ To ensure respectful and responsible use:
 1. **Respect robots.txt** - Follow website guidelines
 2. **Limit request frequency** - Don't overload servers
 3. **Use for legitimate purposes** - Educational and research only
-4. **Comply with ToS** - Follow Google's Terms of Service
+4. **Comply with Google ToS** - Follow [Google's Terms of Service](https://policies.google.com/terms)
+5. **Avoid automated queries** - Respect [Google's Automated Query Guidelines](https://support.google.com/websearch/answer/86640)
 
 ---
 
 ## Project Structure
 
 ```
-google-search-mcp/
+search-mcp/
 ├── src/
-│   ├── mcp-server.ts      # MCP server entry point ⭐ NEW
+│   ├── mcp-server.ts      # MCP server entry point
 │   ├── index.ts           # REST API entry point
+│   ├── cli.ts             # CLI tool entry point
 │   ├── api/               # REST API routes
 │   ├── services/          # Core business logic
 │   ├── engines/           # Browser automation
@@ -246,10 +252,10 @@ google-search-mcp/
 
 ```bash
 npm run dev          # REST API development mode
-npm run dev:mcp      # MCP server development mode ⭐ NEW
+npm run dev:mcp      # MCP server development mode
 npm run build        # Build TypeScript
 npm run start        # Production REST API mode
-npm run start:mcp    # Production MCP mode ⭐ NEW
+npm run start:mcp    # Production MCP mode
 npm run test         # Run tests
 ```
 
@@ -258,8 +264,8 @@ npm run test         # Run tests
 ## Documentation
 
 - 📘 **[MCP_GUIDE.md](MCP_GUIDE.md)** - Complete MCP setup and usage guide
-- 🍪 **[COOKIES_GUIDE.md](COOKIES_GUIDE.md)** - CAPTCHA and cookie management
-- 📝 **[DEV_GUIDE.md](DEV_GUIDE.md)** - Development guide
+- 🍪 **Cookie Management** - See MCP_GUIDE.md
+- 📝 **Development Guide** - See MCP_GUIDE.md
 
 ---
 
@@ -267,9 +273,9 @@ npm run test         # Run tests
 
 ### Claude Desktop Cannot Connect
 
-1. ✅ Verify build: `npm run build`
-2. ✅ Check config path in `claude_desktop_config.json`
-3. ✅ Ensure dependencies installed: `npm install`
+1. ✅ Build project: `npm run build`
+2. ✅ Check config: Ensure path to `mcp-server.js` is correct
+3. ✅ Check dependencies: `npm install`
 4. ✅ Restart Claude Desktop completely
 
 ### CAPTCHA Detected
@@ -293,9 +299,10 @@ npm run test         # Run tests
 
 Users of this project must:
 
-- ✅ Comply with Google's Terms of Service
+- ✅ Comply with [Google's Terms of Service](https://policies.google.com/terms)
+- ✅ Respect [Google's Automated Query Guidelines](https://support.google.com/websearch/answer/86640)
 - ✅ Follow applicable laws and regulations
-- ✅ Respect website policies and guidelines
+- ✅ Respect website policies and guidelines (robots.txt)
 - ✅ Use only for legitimate educational purposes
 
 ### Prohibited Uses
@@ -304,6 +311,7 @@ Users of this project must:
 - ❌ Spam or abuse of services
 - ❌ Violating intellectual property rights
 - ❌ Bypassing security measures for malicious purposes
+- ❌ Violating Google's Terms of Service or automated query policies
 
 ---
 
@@ -340,4 +348,4 @@ Contributions are welcome! Please:
 
 ---
 
-**Note**: This is a personal project for learning purposes. It is not affiliated with, endorsed by, or sponsored by Google or any other company.
+**Note**: This is a personal project for learning purposes. It is not affiliated with, endorsed by, or sponsored by any search provider or other company.

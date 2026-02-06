@@ -1,4 +1,4 @@
-# Google Search MCP 服务器
+# Search MCP 服务器
 
 > 用于将 Google 搜索功能集成到 AI 应用程序的模型上下文协议 (MCP) 服务器
 >
@@ -12,18 +12,22 @@
 
 ## ⚠️ 免责声明
 
-**本项目仅供教育和研究目的使用。** 这是一个帮助开发者将搜索功能集成到 AI 应用程序的个人工具。用户有责任确保其使用符合 Google 的服务条款以及适用法律法规。
+**本项目仅供教育和研究目的使用。** 这是一个帮助开发者将搜索功能集成到 AI 应用程序的个人工具。用户有责任确保其使用符合适用的服务条款以及适用法律法规。
 
 **重要提示:**
-- 这**不是** Google 的官方产品
-- 与 Google **无关联**，未获得认可
-- 请遵守 Google 的服务条款
+- 这**不是**任何搜索引擎的官方产品
+- 与任何搜索提供商**无关联**，未获得认可
+- **Google 和 Google Search 是 Google LLC 的商标。本项目是独立项目，未获得 Google 的认可或关联。**
+- 用户必须遵守 [Google 服务条款](https://policies.google.com/terms)
+- 用户必须遵守 [Google 自动查询指南](https://support.google.com/websearch/answer/86640)
+- 请遵守速率限制和 robots.txt
 - 使用者需自行承担风险
 
 ---
 
 ## 功能特性
 
+- ✅ **Google 搜索集成** - 利用 Google 强大的搜索引擎
 - ✅ **MCP 协议支持** - 通过模型上下文协议原生集成 Claude Desktop
 - ✅ **REST API** - Web 应用程序的标准 HTTP 接口
 - ✅ **本地化搜索** - 基于地理位置的搜索结果
@@ -44,8 +48,8 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/CodeMK/google-search-mcp.git
-cd google-search-mcp
+git clone https://github.com/CodeMK/search-mcp.git
+cd search-mcp
 
 # 安装依赖
 npm install
@@ -69,7 +73,7 @@ npm run build
 完美支持 Claude Desktop 的 AI 辅助开发：
 
 ```bash
-npm run start:mcp
+search-mcp mcp
 ```
 
 然后按照下面的 [MCP 配置指南](#-claude-desktop-配置) 配置 Claude Desktop。
@@ -79,7 +83,7 @@ npm run start:mcp
 传统 HTTP API，用于 Web 应用程序：
 
 ```bash
-npm start
+search-mcp start
 ```
 
 服务器运行在 `http://localhost:3000/api/search`
@@ -105,9 +109,9 @@ npm start
 ```json
 {
   "mcpServers": {
-    "google-search": {
+    "search": {
       "command": "node",
-      "args": ["D:\\google-search-mcp\\dist\\mcp-server.js"],
+      "args": ["D:\\search-mcp\\dist\\mcp-server.js"],
       "env": {
         "HEADLESS": "true",
         "LOG_LEVEL": "info"
@@ -117,7 +121,7 @@ npm start
 }
 ```
 
-**重要提示**: 将 `D:\\google-search-mcp` 替换为你的实际项目路径。
+**重要提示**: 将 `D:\\search-mcp` 替换为你的实际项目路径。macOS/Linux 使用正斜杠: `/path/to/search-mcp/dist/mcp-server.js`
 
 ### 步骤 3: 重启 Claude Desktop
 
@@ -127,7 +131,7 @@ npm start
 
 在 Claude Desktop 中输入：
 ```
-请使用 google_search 搜索 "TypeScript 教程"
+请使用 search 搜索 "TypeScript 教程"
 ```
 
 ---
@@ -144,7 +148,7 @@ curl -X POST http://localhost:3000/api/search \
 
 ### MCP 工具（Claude Desktop）
 
-在 Claude Desktop 对话中可作为 `google_search` 工具使用。
+在 Claude Desktop 对话中可作为 `search` 工具使用。
 
 **请求参数:**
 
@@ -218,17 +222,19 @@ MAX_RESULTS=10               # 每次搜索最大结果数
 1. **尊重 robots.txt** - 遵守网站指南
 2. **限制请求频率** - 不要使服务器过载
 3. **合法目的使用** - 仅用于教育和研究
-4. **遵守服务条款** - 遵守 Google 的服务条款
+4. **遵守 Google 服务条款** - 遵守 [Google 服务条款](https://policies.google.com/terms)
+5. **避免自动查询** - 尊重 [Google 自动查询指南](https://support.google.com/websearch/answer/86640)
 
 ---
 
 ## 项目结构
 
 ```
-google-search-mcp/
+search-mcp/
 ├── src/
 │   ├── mcp-server.ts      # MCP 服务器入口 ⭐ 新增
 │   ├── index.ts           # REST API 入口
+│   ├── cli.ts             # CLI 工具入口
 │   ├── api/               # REST API 路由
 │   ├── services/          # 核心业务逻辑
 │   ├── engines/           # 浏览器自动化
@@ -293,9 +299,10 @@ npm run test         # 运行测试
 
 本项目用户必须:
 
-- ✅ 遵守 Google 的服务条款
+- ✅ 遵守 [Google 服务条款](https://policies.google.com/terms)
+- ✅ 尊重 [Google 自动查询指南](https://support.google.com/websearch/answer/86640)
 - ✅ 遵守适用法律法规
-- ✅ 尊重网站政策和指南
+- ✅ 尊重网站政策和指南 (robots.txt)
 - ✅ 仅用于合法的教育目的
 
 ### 禁止用途
@@ -304,6 +311,7 @@ npm run test         # 运行测试
 - ❌ 垃圾信息或滥用服务
 - ❌ 侵犯知识产权
 - ❌ 为恶意目的绕过安全措施
+- ❌ 违反 Google 服务条款或自动查询政策
 
 ---
 
@@ -340,4 +348,4 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ---
 
-**注**: 这是用于学习目的的个人项目。与 Google 或任何其他公司无关联、未获认可或赞助。
+**注**: 这是用于学习目的的个人项目。与任何搜索提供商或公司无关联、未获认可或赞助。

@@ -140,9 +140,9 @@ export function createRoutes(): Router {
     const { getSupportedCountries } = require('../config/domains');
 
     const infoData = {
-      name: 'Google Search MCP',
+      name: 'Search MCP',
       version: '1.0.0',
-      description: 'Google Search Scraper with Playwright',
+      description: 'Web Search MCP Server with Playwright',
       features: [
         'Localized search based on geographic location',
         'Automatic domain matching',

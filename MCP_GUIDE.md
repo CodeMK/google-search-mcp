@@ -1,4 +1,4 @@
-# Google Search MCP - 使用指南
+# Search MCP - 使用指南
 
 ## 🎯 什么是 MCP 服务器？
 
@@ -13,6 +13,10 @@ MCP (Model Context Protocol) 是一个开放协议，允许 AI 应用程序（�
 ## 📦 安装和编译
 
 ```bash
+# 克隆仓库
+git clone https://github.com/CodeMK/search-mcp.git
+cd search-mcp
+
 # 安装依赖
 npm install
 
@@ -43,9 +47,9 @@ npm run build
 ```json
 {
   "mcpServers": {
-    "google-search": {
-      "command": "node",
-      "args": ["D:\\google-search-mcp\\dist\\mcp-server.js"],
+    "search": {
+      "command": "search-mcp",
+      "args": ["mcp"],
       "env": {
         "HEADLESS": "true",
         "LOG_LEVEL": "info"
@@ -56,7 +60,7 @@ npm run build
 ```
 
 **重要**:
-- 将 `D:\\google-search-mcp` 替换为你的实际项目路径
+- 将 `D:\\search-mcp` 替换为你的实际项目路径
 - Windows 使用双反斜杠 `\\`
 - macOS/Linux 使用正斜杠 `/`
 
@@ -74,19 +78,19 @@ npm run build
 2. 在聊天框中输入：
 
 ```
-请使用 google_search 工具搜索 "TypeScript tutorial"
+请使用 search 工具搜索 "TypeScript tutorial"
 ```
 
-3. Claude 会调用 MCP 服务器的 `google_search` 工具
+3. Claude 会调用 MCP 服务器的 `search` 工具
 4. 你应该看到搜索结果返回
 
 ---
 
 ## 🛠️ 可用工具
 
-### google_search
+### search
 
-搜索 Google 并返回结果。
+搜索网络并返回结果。
 
 **参数**:
 
@@ -99,7 +103,7 @@ npm run build
 **示例**:
 
 ```
-使用 google_search 搜索 "AI 编程工具"，返回 5 个结果
+使用 search 搜索 "AI 编程工具"，返回 5 个结果
 ```
 
 ---
@@ -109,7 +113,10 @@ npm run build
 如果你想在不使用 Claude Desktop 的情况下测试 MCP 服务器：
 
 ```bash
-# 运行 MCP 服务器
+# 运行 MCP 服务器（从 npm）
+search-mcp mcp
+
+# 或从源码运行
 npm run start:mcp
 ```
 
@@ -122,6 +129,8 @@ npm run start:mcp
 ### REST API 模式
 
 ```bash
+search-mcp start
+# 或
 npm start
 # 服务器运行在 http://localhost:3000
 ```
@@ -134,6 +143,8 @@ npm start
 ### MCP 服务器模式
 
 ```bash
+search-mcp mcp
+# 或
 npm run start:mcp
 # 通过 stdio 与 Claude Desktop 通信
 ```
@@ -160,9 +171,9 @@ npm run start:mcp
 ### 工具调用失败
 
 **可能原因**:
-- 首次使用需要手动解决 CAPTCHA
+- 首次使用需要手动解决验证码
 - 速率限制触发（等待 3-5 分钟）
-- Google 连接被关闭（等待后重试）
+- 连接被关闭（等待后重试）
 
 **解决方案**:
 1. 临时设置 `HEADLESS=false`
@@ -189,13 +200,14 @@ npm run dev:mcp
 
 - [MCP 协议规范](https://modelcontextprotocol.io/)
 - [Claude Desktop 文档](https://docs.anthropic.com/claude/docs/mcp)
-- [项目 GitHub](https://github.com/CodeMK/google-search-mcp)
+- [项目 GitHub](https://github.com/codemk/search-mcp)
 
 ---
 
 ## ⚠️ 重要提示
 
-- 首次使用需要手动解决 Google CAPTCHA
-- 请遵守 Google 服务条款
+- 首次使用可能需要手动解决验证码
+- **请遵守 [Google 服务条款](https://policies.google.com/terms)**
+- **请尊重 [Google 自动查询指南](https://support.google.com/websearch/answer/86640)**
 - 仅供教育和研究目的
 - 不要过度频繁请求（已内置速率限制）

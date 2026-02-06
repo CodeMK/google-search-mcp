@@ -27,7 +27,7 @@ export function createServer(): Application {
   // Root endpoint
   app.get('/', (_req, res) => {
     const rootData = {
-      name: 'Google Search MCP',
+      name: 'Search MCP',
       version: '1.0.0',
       status: 'running',
       endpoints: {
@@ -75,7 +75,7 @@ export async function startServer(): Promise<void> {
       const port = typeof address === 'string' ? address : address?.port;
 
       logger.info('=' .repeat(50), 'Server');
-      logger.info('  Google Search MCP Server Started', 'Server');
+      logger.info('  Search MCP Server Started', 'Server');
       logger.info('=' .repeat(50), 'Server');
       logger.info(`  Port: ${port}`, 'Server');
       logger.info(`  Environment: ${process.env.NODE_ENV || 'development'}`, 'Server');

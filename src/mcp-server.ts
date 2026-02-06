@@ -1,6 +1,6 @@
 /**
- * Google Search MCP Server
- * Model Context Protocol server for Google Search integration
+ * Search MCP Server
+ * Model Context Protocol server for web search integration
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -20,7 +20,7 @@ async function main(): Promise<void> {
   // Create MCP server instance
   const server = new Server(
     {
-      name: 'google-search-mcp-server',
+      name: 'search-mcp-server',
       version: '1.0.0',
     },
     {
@@ -30,14 +30,14 @@ async function main(): Promise<void> {
     }
   );
 
-  // Register the Google Search tool
+  // Register the Search tool
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
       tools: [
         {
-          name: 'google_search',
+          name: 'search',
           description:
-            'Search Google and get results. Supports geographic localization and customizable result count.',
+            'Search the web and get results. Supports geographic localization and customizable result count.',
           inputSchema: {
             type: 'object',
             properties: {
@@ -69,7 +69,7 @@ async function main(): Promise<void> {
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
 
-    if (name === 'google_search') {
+    if (name === 'search') {
       try {
         const searchRequest: SearchRequest = {
           query: String(args?.query || ''),
@@ -140,7 +140,7 @@ async function main(): Promise<void> {
   const transport = new StdioServerTransport();
   await server.connect(transport);
 
-  logger.info('Google Search MCP Server started and ready', 'MCPServer');
+  logger.info('Search MCP Server started and ready', 'MCPServer');
   logger.error('STDIO server running - waiting for MCP client messages...', 'MCPServer');
 }
 
