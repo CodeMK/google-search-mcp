@@ -18,6 +18,10 @@ logs/
 *.log
 npm-debug.log*
 
+# Data (cookies, cache, etc.)
+data/
+.cache/
+
 # IDE
 .vscode/
 .idea/
