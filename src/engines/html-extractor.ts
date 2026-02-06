@@ -34,10 +34,27 @@ export class HtmlExtractor {
         ([selectors, limit]: readonly [any, number]) => {
           const items: any[] = [];
 
-          // Find all result containers
-          const resultContainers = document.querySelectorAll(
-            selectors.resultItem
-          );
+          // Helper function to try multiple selectors
+          const querySelector = (element: Element, selectorList: string): Element | null => {
+            const selectors = selectorList.split(',').map(s => s.trim());
+            for (const selector of selectors) {
+              const el = element.querySelector(selector);
+              if (el) return el;
+            }
+            return null;
+          };
+
+          const querySelectorAll = (element: ParentNode, selectorList: string): NodeListOf<Element> => {
+            const selectors = selectorList.split(',').map(s => s.trim());
+            for (const selector of selectors) {
+              const els = element.querySelectorAll(selector);
+              if (els.length > 0) return els;
+            }
+            return document.createDocumentFragment().childNodes as unknown as NodeListOf<Element>;
+          };
+
+          // Find all result containers using multiple selectors
+          const resultContainers = querySelectorAll(document, selectors.resultItem);
 
           // Limit results
           const count = Math.min(resultContainers.length, limit);
@@ -45,24 +62,30 @@ export class HtmlExtractor {
           for (let i = 0; i < count; i++) {
             const container = resultContainers[i] as Element;
 
-            // Extract title
-            const titleEl = container.querySelector(selectors.title);
+            // Extract title (try multiple selectors)
+            const titleEl = querySelector(container, selectors.title);
             const title = titleEl?.textContent?.trim() || '';
 
-            // Extract link
-            const linkEl = container.querySelector(selectors.link);
-            const link = (linkEl as HTMLAnchorElement)?.href || '';
+            // Extract link (try multiple selectors, prefer direct links)
+            const linkEl = querySelector(container, selectors.link);
+            let link = '';
+            if (linkEl) {
+              link = (linkEl as HTMLAnchorElement)?.href || linkEl?.getAttribute('href') || '';
+            }
 
             // Extract display URL
-            const displayUrlEl = container.querySelector(selectors.displayUrl);
-            const displayUrl = displayUrlEl?.textContent?.trim() ||
-                              linkEl?.getAttribute('href') || '';
+            const displayUrlEl = querySelector(container, selectors.displayUrl);
+            let displayUrl = displayUrlEl?.textContent?.trim() || '';
+            if (!displayUrl && linkEl) {
+              displayUrl = linkEl?.getAttribute('href') || '';
+            }
 
-            // Extract snippet
-            const snippetEl = container.querySelector(selectors.snippet);
+            // Extract snippet (try multiple selectors)
+            const snippetEl = querySelector(container, selectors.snippet);
             const snippet = snippetEl?.textContent?.trim() || '';
 
-            if (title && link) {
+            // Only add if we have at least title and link
+            if (title && link && link.startsWith('http')) {
               items.push({
                 rank: i + 1,
                 title,

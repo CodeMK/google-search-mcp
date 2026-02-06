@@ -9,6 +9,7 @@ import { ApiResponse, ApiErrorResponse } from '../types/api';
 import { searchEngine } from '../services/search-engine';
 import { logger } from '../utils/logger';
 import { HTTP_STATUS } from '../config/constants';
+import { apiRateLimiter } from '../utils/rate-limiter';
 
 const router = Router;
 
@@ -42,6 +43,9 @@ export function createRoutes(): Router {
         res.status(HTTP_STATUS.BAD_REQUEST).json(errorResponse);
         return;
       }
+
+      // Apply rate limiting (simulates human behavior)
+      await apiRateLimiter.throttle();
 
       logger.info(
         `API request: search="${searchRequest.query}" region=${searchRequest.region || 'auto'}`,

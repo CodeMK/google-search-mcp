@@ -60,24 +60,34 @@ export const CAPTCHA_TEXT_PATTERNS = [
   'this page is protected by',
 ];
 
-// Google search result selectors
+// Google search result selectors (updated with multiple fallbacks)
 export const SEARCH_SELECTORS = {
-  // Main container
-  resultsContainer: 'div#search',
-  // Individual result
-  resultItem: 'div[data-hveid]',
-  // Title
-  title: 'h3',
-  // Link
-  link: 'a',
-  // Snippet/description
-  snippet: 'div[data-hveid] span, div.VwiC3b',
+  // Main container - multiple fallbacks
+  resultsContainer: 'div#search, div#main, div[role="main"]',
+
+  // Individual result containers (most specific to least specific)
+  resultItem: 'div[data-hveid], div.g, div[data-asr], div.tF2Cxc, div[lang]',
+
+  // Title selectors - Google uses multiple structures
+  title: 'h3, h3.LC20lb, h3.yrBZH, div[role="heading"]',
+
+  // Link selectors
+  link: 'a, a[href], div.yuRUbf a',
+
+  // Snippet/description - multiple possible containers
+  snippet: 'div.VwiC3b, div[data-snf], div[style*="-webkit-line-clamp"], span.aCOpRe, div.it5bQ',
+
   // Display URL
-  displayUrl: 'div[data-hveid] cite, div.wwWE2c',
+  displayUrl: 'cite, div.wwWE2c, span.yuRUbf, div.fl, a[ping] cite',
+
   // Related searches
-  relatedSearches: 'div#kp', // Knowledge panel
+  relatedSearches: 'div#kp, div[data-hveid][data-ved]', // Knowledge panel
+
   // Pagination
-  nextButton: 'a#pnnext',
+  nextButton: 'a#pnnext, span[aria-label="Next"]',
+
+  // Additional selectors for debugging
+  anyResult: 'div.g, div[data-hveid], div.tF2Cxc',
 };
 
 // Error types
