@@ -1,6 +1,8 @@
 # Google Search MCP 服务器
 
 > 用于将 Google 搜索功能集成到 AI 应用程序的模型上下文协议 (MCP) 服务器
+>
+> 🤖 **原生 Claude Desktop 集成** - 直接在 Claude 中使用 Google 搜索！
 
 ---
 
@@ -22,11 +24,11 @@
 
 ## 功能特性
 
-- ✅ **MCP 协议支持** - 标准的模型上下文协议实现
+- ✅ **MCP 协议支持** - 通过模型上下文协议原生集成 Claude Desktop
+- ✅ **REST API** - Web 应用程序的标准 HTTP 接口
 - ✅ **本地化搜索** - 基于地理位置的搜索结果
 - ✅ **会话管理** - 基于 Cookie 的会话持久化
 - ✅ **速率限制** - 内置请求节流，确保负责任地使用
-- ✅ **REST API** - 标准的 HTTP 接口，易于集成
 - ✅ **智能重试** - 指数退避的自动恢复机制
 
 ---
@@ -54,21 +56,95 @@ npx playwright install chromium
 # 复制环境变量配置
 cp .env.example .env
 
-# 启动服务
+# 编译项目
+npm run build
+```
+
+### 选择运行模式
+
+本项目支持**两种模式** - 根据使用场景选择：
+
+#### 🤖 MCP 服务器模式（推荐用于 Claude Desktop）
+
+完美支持 Claude Desktop 的 AI 辅助开发：
+
+```bash
+npm run start:mcp
+```
+
+然后按照下面的 [MCP 配置指南](#-claude-desktop-配置) 配置 Claude Desktop。
+
+#### 🌐 REST API 模式（用于 Web 应用程序）
+
+传统 HTTP API，用于 Web 应用程序：
+
+```bash
 npm start
+```
+
+服务器运行在 `http://localhost:3000/api/search`
+
+---
+
+## 🤖 Claude Desktop 配置
+
+### 步骤 1: 找到配置文件
+
+**Windows**:
+```
+%APPDATA%\Claude\claude_desktop_config.json
+```
+
+**macOS**:
+```
+~/Library/Application Support/Claude/claude_desktop_config.json
+```
+
+### 步骤 2: 添加配置
+
+```json
+{
+  "mcpServers": {
+    "google-search": {
+      "command": "node",
+      "args": ["D:\\google-search-mcp\\dist\\mcp-server.js"],
+      "env": {
+        "HEADLESS": "true",
+        "LOG_LEVEL": "info"
+      }
+    }
+  }
+}
+```
+
+**重要提示**: 将 `D:\\google-search-mcp` 替换为你的实际项目路径。
+
+### 步骤 3: 重启 Claude Desktop
+
+完全退出并重新启动 Claude Desktop。
+
+### 步骤 4: 测试
+
+在 Claude Desktop 中输入：
+```
+请使用 google_search 搜索 "TypeScript 教程"
 ```
 
 ---
 
 ## API 使用
 
-### 搜索接口
+### REST API 端点
 
 ```bash
 curl -X POST http://localhost:3000/api/search \
   -H "Content-Type: application/json" \
   -d '{"query": "TypeScript", "region": "US"}'
 ```
+
+### MCP 工具（Claude Desktop）
+
+在 Claude Desktop 对话中可作为 `google_search` 工具使用。
 
 **请求参数:**
 
@@ -111,8 +187,8 @@ curl -X POST http://localhost:3000/api/search \
 
 ```bash
 # 服务器配置
-PORT=3000                    # 服务端口
-HOST=0.0.0.0                 # 服务主机
+PORT=3000                    # REST API 服务器端口
+HOST=0.0.0.0                 # 服务器主机
 LOG_LEVEL=info               # 日志级别
 
 # 浏览器配置
@@ -151,14 +227,17 @@ MAX_RESULTS=10               # 每次搜索最大结果数
 ```
 google-search-mcp/
 ├── src/
-│   ├── api/              # API 路由和控制器
-│   ├── services/         # 核心业务逻辑
-│   ├── engines/          # 浏览器自动化
-│   ├── utils/            # 工具函数和辅助函数
-│   └── config/           # 配置文件
-├── dist/                 # 编译输出
-├── data/                 # 运行时数据 (cookies, 缓存)
-└── logs/                 # 应用日志
+│   ├── mcp-server.ts      # MCP 服务器入口 ⭐ 新增
+│   ├── index.ts           # REST API 入口
+│   ├── api/               # REST API 路由
+│   ├── services/          # 核心业务逻辑
+│   ├── engines/           # 浏览器自动化
+│   ├── utils/             # 工具函数
+│   └── config/            # 配置文件
+├── dist/                  # 编译输出
+├── data/                  # 运行时数据 (cookies)
+├── logs/                  # 应用日志
+└── scripts/               # 工具脚本
 ```
 
 ---
@@ -166,36 +245,45 @@ google-search-mcp/
 ## 开发
 
 ```bash
-npm run dev          # 开发模式
+npm run dev          # REST API 开发模式
+npm run dev:mcp      # MCP 服务器开发模式 ⭐ 新增
 npm run build        # 编译 TypeScript
-npm run start        # 生产模式
+npm run start        # 生产环境 REST API 模式
+npm run start:mcp    # 生产环境 MCP 模式 ⭐ 新增
 npm run test         # 运行测试
 ```
 
 ---
 
+## 文档
+
+- 📘 **[MCP_GUIDE.md](MCP_GUIDE.md)** - 完整的 MCP 配置和使用指南
+- 🍪 **[COOKIES_GUIDE.md](COOKIES_GUIDE.md)** - CAPTCHA 和 Cookie 管理
+- 📝 **[DEV_GUIDE.md](DEV_GUIDE.md)** - 开发指南
+
+---
+
 ## 故障排除
 
-### 问题: 连接被关闭
+### Claude Desktop 无法连接
 
-**解决方案:**
+1. ✅ 验证编译: `npm run build`
+2. ✅ 检查配置文件中的路径
+3. ✅ 确保依赖已安装: `npm install`
+4. ✅ 完全重启 Claude Desktop
+
+### 检测到验证码
+
+1. 在 `.env` 中设置 `HEADLESS=false`
+2. 重启服务器
+3. 在浏览器中手动完成验证码
+4. Cookies 将被保存供将来使用
+
+### 连接被关闭
+
 - 等待 3-5 分钟后重试
-- 系统会自动重试
+- 系统有自动重试机制
 - 检查是否触发突发限制
-
-### 问题: 搜索结果为空
-
-**解决方案:**
-- HTML 选择器可能需要更新
-- 检查日志中的错误信息
-- 尝试不同的搜索词
-
-### 问题: 检测到验证码
-
-**解决方案:**
-- 在 `.env` 中设置 `HEADLESS=false`
-- 手动完成验证码
-- Cookies 将被保存供将来使用
 
 ---
 
@@ -239,8 +327,16 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 ## 致谢
 
 - 使用 [Playwright](https://playwright.dev/) 构建
-- 遵循 [模型上下文协议](https://modelcontextprotocol.io/)
+- 实现了 [模型上下文协议](https://modelcontextprotocol.io/)
 - 灵感来自 AI 开发社区
+
+---
+
+## 资源
+
+- [MCP 协议规范](https://modelcontextprotocol.io/)
+- [Claude Desktop 文档](https://docs.anthropic.com/claude/docs/mcp)
+- [Playwright 文档](https://playwright.dev/)
 
 ---
 

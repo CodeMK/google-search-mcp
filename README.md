@@ -1,6 +1,8 @@
 # Google Search MCP Server
 
 > A Model Context Protocol (MCP) server for integrating Google Search capabilities into AI applications
+>
+> 🤖 **Native Claude Desktop integration** - Use Google Search directly in Claude!
 
 ---
 
@@ -22,11 +24,11 @@
 
 ## Features
 
-- ✅ **MCP Protocol Support** - Standard Model Context Protocol implementation
+- ✅ **MCP Protocol Support** - Native Claude Desktop integration via Model Context Protocol
+- ✅ **REST API** - Standard HTTP interface for web applications
 - ✅ **Localized Search** - Geographic location-based search results
 - ✅ **Session Management** - Cookie-based session persistence
 - ✅ **Rate Limiting** - Built-in request throttling for responsible use
-- ✅ **REST API** - Standard HTTP interface for easy integration
 - ✅ **Smart Retry** - Automatic recovery with exponential backoff
 
 ---
@@ -54,21 +56,95 @@ npx playwright install chromium
 # Copy environment config
 cp .env.example .env
 
-# Start server
+# Build the project
+npm run build
+```
+
+### Choose Your Mode
+
+This project supports **two modes** - choose based on your use case:
+
+#### 🤖 MCP Server Mode (Recommended for Claude Desktop)
+
+Perfect for AI-assisted development with Claude Desktop:
+
+```bash
+npm run start:mcp
+```
+
+Then configure Claude Desktop following the [MCP Setup Guide](#-claude-desktop-setup) below.
+
+#### 🌐 REST API Mode (For Web Applications)
+
+Traditional HTTP API for web applications:
+
+```bash
 npm start
+```
+
+Server runs on `http://localhost:3000/api/search`
+
+---
+
+## 🤖 Claude Desktop Setup
+
+### Step 1: Find Config File
+
+**Windows**:
+```
+%APPDATA%\Claude\claude_desktop_config.json
+```
+
+**macOS**:
+```
+~/Library/Application Support/Claude/claude_desktop_config.json
+```
+
+### Step 2: Add Configuration
+
+```json
+{
+  "mcpServers": {
+    "google-search": {
+      "command": "node",
+      "args": ["D:\\google-search-mcp\\dist\\mcp-server.js"],
+      "env": {
+        "HEADLESS": "true",
+        "LOG_LEVEL": "info"
+      }
+    }
+  }
+}
+```
+
+**Important**: Replace `D:\\google-search-mcp` with your actual project path.
+
+### Step 3: Restart Claude Desktop
+
+Completely quit and restart Claude Desktop.
+
+### Step 4: Test
+
+In Claude Desktop, type:
+```
+Please use google_search to find "TypeScript tutorial"
 ```
 
 ---
 
 ## API Usage
 
-### Search Endpoint
+### REST API Endpoint
 
 ```bash
 curl -X POST http://localhost:3000/api/search \
   -H "Content-Type: application/json" \
   -d '{"query": "TypeScript", "region": "US"}'
 ```
+
+### MCP Tool (Claude Desktop)
+
+Available as the `google_search` tool in Claude Desktop conversations.
 
 **Request Parameters:**
 
@@ -111,7 +187,7 @@ curl -X POST http://localhost:3000/api/search \
 
 ```bash
 # Server Configuration
-PORT=3000                    # Server port
+PORT=3000                    # REST API server port
 HOST=0.0.0.0                 # Server host
 LOG_LEVEL=info               # Log level
 
@@ -151,14 +227,17 @@ To ensure respectful and responsible use:
 ```
 google-search-mcp/
 ├── src/
-│   ├── api/              # API routes and controllers
-│   ├── services/         # Core business logic
-│   ├── engines/          # Browser automation
-│   ├── utils/            # Utilities and helpers
-│   └── config/           # Configuration files
-├── dist/                 # Compiled output
-├── data/                 # Runtime data (cookies, cache)
-└── logs/                 # Application logs
+│   ├── mcp-server.ts      # MCP server entry point ⭐ NEW
+│   ├── index.ts           # REST API entry point
+│   ├── api/               # REST API routes
+│   ├── services/          # Core business logic
+│   ├── engines/           # Browser automation
+│   ├── utils/             # Utilities
+│   └── config/            # Configuration
+├── dist/                  # Compiled output
+├── data/                  # Runtime data (cookies)
+├── logs/                  # Application logs
+└── scripts/               # Utility scripts
 ```
 
 ---
@@ -166,36 +245,45 @@ google-search-mcp/
 ## Development
 
 ```bash
-npm run dev          # Development mode
+npm run dev          # REST API development mode
+npm run dev:mcp      # MCP server development mode ⭐ NEW
 npm run build        # Build TypeScript
-npm run start        # Production mode
+npm run start        # Production REST API mode
+npm run start:mcp    # Production MCP mode ⭐ NEW
 npm run test         # Run tests
 ```
 
 ---
 
+## Documentation
+
+- 📘 **[MCP_GUIDE.md](MCP_GUIDE.md)** - Complete MCP setup and usage guide
+- 🍪 **[COOKIES_GUIDE.md](COOKIES_GUIDE.md)** - CAPTCHA and cookie management
+- 📝 **[DEV_GUIDE.md](DEV_GUIDE.md)** - Development guide
+
+---
+
 ## Troubleshooting
 
-### Issue: Connection Closed
+### Claude Desktop Cannot Connect
 
-**Solution:**
+1. ✅ Verify build: `npm run build`
+2. ✅ Check config path in `claude_desktop_config.json`
+3. ✅ Ensure dependencies installed: `npm install`
+4. ✅ Restart Claude Desktop completely
+
+### CAPTCHA Detected
+
+1. Set `HEADLESS=false` in `.env`
+2. Restart the server
+3. Complete CAPTCHA manually in browser
+4. Cookies will be saved for future use
+
+### Connection Closed
+
 - Wait 3-5 minutes before retrying
-- System has automatic retry
+- System has automatic retry mechanism
 - Check if burst limit was triggered
-
-### Issue: Empty Results
-
-**Solution:**
-- HTML selectors may need updates
-- Check logs for error messages
-- Try a different search query
-
-### Issue: CAPTCHA Detected
-
-**Solution:**
-- Set `HEADLESS=false` in `.env`
-- Complete CAPTCHA manually
-- Cookies will be saved for future use
 
 ---
 
@@ -239,8 +327,16 @@ Contributions are welcome! Please:
 ## Acknowledgments
 
 - Built with [Playwright](https://playwright.dev/)
-- Follows [Model Context Protocol](https://modelcontextprotocol.io/)
+- Implements [Model Context Protocol](https://modelcontextprotocol.io/)
 - Inspired by the AI development community
+
+---
+
+## Resources
+
+- [MCP Protocol Specification](https://modelcontextprotocol.io/)
+- [Claude Desktop Documentation](https://docs.anthropic.com/claude/docs/mcp)
+- [Playwright Documentation](https://playwright.dev/)
 
 ---
 
