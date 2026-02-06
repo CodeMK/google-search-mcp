@@ -236,6 +236,17 @@ export class SearchEngine {
 
       if (results.length === 0) {
         logger.warn('No results found', 'SearchEngine');
+
+        // Save debug HTML for inspection
+        try {
+          const debugHtmlPath = `./logs/debug-${Date.now()}.html`;
+          const fs = require('fs');
+          const html = await page.content();
+          fs.writeFileSync(debugHtmlPath, html);
+          logger.info(`Debug HTML saved to ${debugHtmlPath}`, 'SearchEngine');
+        } catch (e) {
+          logger.error('Failed to save debug HTML', 'SearchEngine', { error: e });
+        }
       }
 
       // Save cookies for future use

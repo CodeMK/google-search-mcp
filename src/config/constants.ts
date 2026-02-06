@@ -63,31 +63,32 @@ export const CAPTCHA_TEXT_PATTERNS = [
 // Google search result selectors (updated with multiple fallbacks)
 export const SEARCH_SELECTORS = {
   // Main container - multiple fallbacks
-  resultsContainer: 'div#search, div#main, div[role="main"]',
+  resultsContainer: 'div#search, div#main, div[role="main"], div#center_col, div[role="main"] div',
 
   // Individual result containers (most specific to least specific)
-  resultItem: 'div[data-hveid], div.g, div[data-asr], div.tF2Cxc, div[lang]',
+  // Simple comma-separated list without template literals
+  resultItem: 'div[data-hveid],div.g,div[data-asr],div.tF2Cxc,div[lang],div[data-sokoban-feature],div[data-snf],div[role="listitem"],div.MjjYud,div.Gx5Zad',
 
   // Title selectors - Google uses multiple structures
-  title: 'h3, h3.LC20lb, h3.yrBZH, div[role="heading"]',
+  title: 'h3,h3.LC20lb,h3.yrBZH,h3.Dkv0Ad,div[role="heading"],a h3',
 
-  // Link selectors
-  link: 'a, a[href], div.yuRUbf a',
+  // Link selectors - prefer direct links over redirects
+  link: 'a[href*="http"],a[ping],div[role="heading"] a,h3 a',
 
   // Snippet/description - multiple possible containers
-  snippet: 'div.VwiC3b, div[data-snf], div[style*="-webkit-line-clamp"], span.aCOpRe, div.it5bQ',
+  snippet: 'div.VwiC3b,div[data-snf],span.aCOpRe,div.it5bQ,div.YrbPuc,div[role="heading"]+div',
 
   // Display URL
-  displayUrl: 'cite, div.wwWE2c, span.yuRUbf, div.fl, a[ping] cite',
+  displayUrl: 'cite,div.wwWE2c,span.yuRUbf,div.fl,a[ping] cite,div.CqPV9c,span[role="text"]',
 
   // Related searches
   relatedSearches: 'div#kp, div[data-hveid][data-ved]', // Knowledge panel
 
   // Pagination
-  nextButton: 'a#pnnext, span[aria-label="Next"]',
+  nextButton: 'a#pnnext, span[aria-label="Next"], a[aria-label="Next"]',
 
   // Additional selectors for debugging
-  anyResult: 'div.g, div[data-hveid], div.tF2Cxc',
+  anyResult: 'div.g, div[data-hveid], div.tF2Cxc, div.MjjYud',
 };
 
 // Error types
