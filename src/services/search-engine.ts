@@ -12,9 +12,9 @@ import { CookieHandler } from '../engines/cookie-handler';
 import { CaptchaDetector } from '../engines/captcha-detector';
 import { HtmlExtractor } from '../engines/html-extractor';
 import { logger } from '../utils/logger';
-import { retry } from '../utils/retry';
 import { cookiesManager } from '../utils/cookies-manager';
 import { humanBehavior } from '../utils/human-behavior';
+import { smartRetry, searchCircuitBreaker } from '../utils/smart-retry';
 
 export class SearchEngine {
   private browser: Browser | null = null;
@@ -48,21 +48,31 @@ export class SearchEngine {
 
       logger.debug(`Search URL: ${targetUrl}`, 'SearchEngine');
 
-      // Perform search with retry
-      const results = await retry(
-        () => this.executeSearch(targetUrl, request),
-        {
-          maxAttempts: config.retry.maxAttempts,
-          initialBackoffMs: config.retry.backoffMs,
-          retryableErrors: config.retry.retryableErrors,
-          onRetry: (attempt, error) => {
-            logger.warn(
-              `Retrying search (attempt ${attempt})`,
-              'SearchEngine',
-              { error: error.message }
-            );
-          },
-        }
+      // Perform search with smart retry and circuit breaker
+      const results = await searchCircuitBreaker.execute(() =>
+        smartRetry(
+          () => this.executeSearch(targetUrl, request),
+          {
+            maxAttempts: 5,
+            initialBackoffMs: 5000,
+            maxBackoffMs: 60000,
+            retryableErrors: [
+              'Timeout',
+              'Network',
+              'CAPTCHA',
+              'CONNECTION_CLOSED',
+              'ERR_CONNECTION_CLOSED',
+            ],
+            extraDelayOnFailure: 45000, // 45s extra delay on connection close
+            onRetry: (attempt, error) => {
+              logger.warn(
+                `Smart retry attempt ${attempt}/5`,
+                'SearchEngine',
+                { error: error.message }
+              );
+            },
+          }
+        )
       );
 
       // Build response

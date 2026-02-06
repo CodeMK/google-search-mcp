@@ -99,8 +99,8 @@ export class RateLimiter {
 
 // Singleton instance for API requests
 export const apiRateLimiter = new RateLimiter({
-  minDelayMs: 8000,   // 8 seconds minimum between searches
-  maxDelayMs: 20000,  // 20 seconds maximum
-  burstLimit: 3,      // Max 3 rapid requests
-  burstPeriodMs: 120000, // In 2 minutes
+  minDelayMs: 15000,   // 15 seconds minimum between searches
+  maxDelayMs: 30000,  // 30 seconds maximum
+  burstLimit: 2,      // Max 2 rapid requests
+  burstPeriodMs: 180000, // In 3 minutes
 });
