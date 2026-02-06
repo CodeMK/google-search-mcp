@@ -2,11 +2,22 @@
  * Application Constants
  */
 
-// User Agent strings for different platforms
+// User Agent strings for different platforms (Updated to latest versions)
 export const USER_AGENTS = {
-  desktop: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-  mobile: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+  desktop: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+  mobile: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1',
+  mac: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
 };
+
+// Multiple user agents for rotation (helps avoid detection)
+export const USER_AGENT_POOL = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Safari/605.1.15',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0',
+];
 
 // Cookie consent button selectors (multiple languages)
 export const COOKIE_CONSENT_SELECTORS = [
@@ -116,3 +127,34 @@ export const TIMEOUTS = {
   browserLaunch: 30000,   // Browser launch
   default: 5000,          // Default timeout
 };
+
+// Human behavior simulation settings
+export const HUMAN_BEHAVIOR = {
+  // Random delays (in milliseconds)
+  typingDelay: { min: 50, max: 150 },
+  clickDelay: { min: 100, max: 300 },
+  scrollDelay: { min: 500, max: 1500 },
+  pageLoadWait: { min: 2000, max: 4000 },
+
+  // Mouse movement settings
+  mouseSpeed: { min: 100, max: 300 },
+  mouseJitter: 5, // Random pixel offset for mouse movement
+
+  // Scroll behavior
+  scrollAmount: { min: 100, max: 500 },
+  scrollSteps: { min: 2, max: 5 },
+
+  // Random chance of performing human-like actions
+  chanceOfRandomScroll: 0.3,    // 30% chance
+  chanceOfRandomPause: 0.2,     // 20% chance
+  chanceOfMouseMovement: 0.5,   // 50% chance
+};
+
+// Viewport size variations for realism
+export const VIEWPORT_VARIATIONS = [
+  { width: 1920, height: 1080 },  // Full HD
+  { width: 1366, height: 768 },   // Laptop
+  { width: 1440, height: 900 },   // MacBook
+  { width: 1536, height: 864 },   // Common laptop
+  { width: 2560, height: 1440 },  // 2K
+];

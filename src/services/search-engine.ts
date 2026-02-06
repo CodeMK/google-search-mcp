@@ -13,6 +13,8 @@ import { CaptchaDetector } from '../engines/captcha-detector';
 import { HtmlExtractor } from '../engines/html-extractor';
 import { logger } from '../utils/logger';
 import { retry } from '../utils/retry';
+import { cookiesManager } from '../utils/cookies-manager';
+import { humanBehavior } from '../utils/human-behavior';
 
 export class SearchEngine {
   private browser: Browser | null = null;
@@ -115,21 +117,74 @@ export class SearchEngine {
     let page: Page | null = null;
 
     try {
-      // Launch browser
+      // Use random viewport and user agent for realism
+      const randomViewport = humanBehavior.getRandomViewport();
+      const randomUserAgent = humanBehavior.getRandomUserAgent();
+
+      logger.debug('Using random fingerprint', 'SearchEngine', {
+        viewport: randomViewport,
+        userAgent: randomUserAgent.substring(0, 50) + '...',
+      });
+
+      // Launch browser with random fingerprint
       browser = await chromium.launch({
         headless: config.browser.headless,
         timeout: config.browser.timeout,
         slowMo: config.browser.slowMo,
+        args: [
+          '--disable-blink-features=AutomationControlled',
+          '--disable-dev-shm-usage',
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+        ],
       });
 
-      // Create context
+      // Create context with random fingerprint
       context = await browser.newContext({
-        viewport: config.browser.viewport,
-        userAgent: config.browser.userAgent,
+        viewport: randomViewport,
+        userAgent: randomUserAgent,
+        locale: 'en-US',
+        timezoneId: 'America/New_York',
+        permissions: ['geolocation'],
+        geolocation: { latitude: 40.7128, longitude: -74.0060 }, // New York
+        colorScheme: 'light',
       });
+
+      // Inject anti-detection scripts
+      await context.addInitScript(() => {
+        // Hide webdriver property
+        Object.defineProperty(navigator, 'webdriver', {
+          get: () => undefined,
+        });
+
+        // Mock Chrome object
+        (window as any).chrome = {
+          runtime: {},
+        };
+
+        // Mock permissions
+        const originalQuery = window.navigator.permissions.query;
+        window.navigator.permissions.query = (parameters: any) => (
+          parameters.name === 'notifications' ?
+            Promise.resolve({ state: 'prompt' } as any) :
+            originalQuery(parameters)
+        );
+      });
+
+      // Try to load cookies for google.com
+      const cookiesLoaded = await cookiesManager.loadLatestCookies(context, 'google.com');
+      if (cookiesLoaded) {
+        logger.info('Successfully loaded Google cookies', 'SearchEngine');
+      } else {
+        logger.debug('No saved cookies found, proceeding without', 'SearchEngine');
+      }
 
       // Create page
       page = await context.newPage();
+
+      // Simulate human behavior before navigation
+      const simulator = humanBehavior.forPage(page);
+      await simulator.simulatePreSearchBehavior();
 
       // Navigate to search URL
       logger.debug('Navigating to search URL...', 'SearchEngine');
@@ -137,6 +192,9 @@ export class SearchEngine {
         waitUntil: 'networkidle',
         timeout: config.browser.navigationTimeout,
       });
+
+      // Simulate human behavior after page load
+      await simulator.simulatePostLoadBehavior();
 
       // Handle cookie consent
       await CookieHandler.handle(page);
@@ -169,6 +227,9 @@ export class SearchEngine {
       if (results.length === 0) {
         logger.warn('No results found', 'SearchEngine');
       }
+
+      // Save cookies for future use
+      await cookiesManager.saveCookies(context, 'google.com');
 
       return results;
     } catch (error) {
