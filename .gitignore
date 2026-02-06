@@ -46,3 +46,4 @@ playwright/.cache/
 *.tmp
 *.temp
 .cache/
+prd.md
